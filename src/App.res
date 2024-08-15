@@ -170,10 +170,24 @@ let mapString = (s, f) => {
   })
 }
 
-let groupByTwo = arr => {
-  let left = arr->Array.filterWithIndex((_, i) => mod(i, 2) == 0)
-  let right = arr->Array.filterWithIndex((_, i) => mod(i, 2) == 0)
-  Belt.Array.zip(left, right)
+module Column = {
+  @react.component
+  let make = (~colorCodes, ~size) => {
+    <div>
+      {colorCodes
+      ->mapString((x, j) => {
+        <div
+          key={j->Int.toString}
+          style={{
+            height: size,
+            width: size,
+            backgroundColor: x->charToColor,
+          }}
+        />
+      })
+      ->React.array}
+    </div>
+  }
 }
 
 module Millitext = {
@@ -185,49 +199,12 @@ module Millitext = {
         use2x
           ? {
               let c = c->String.toUpperCase->charToBits2x
-
-              <div>
-                {c
-                ->mapString((x, _) => x)
-                ->groupByTwo
-                ->Array.mapWithIndex((v, j) => {
-                  let (x, y) = v
-                  <div key={j->Int.toString} className="flex flex-row">
-                    <div
-                      style={{
-                        height: size,
-                        width: size,
-                        backgroundColor: x->charToColor,
-                      }}
-                    />
-                    <div
-                      style={{
-                        height: size,
-                        width: size,
-                        backgroundColor: y->charToColor,
-                      }}
-                    />
-                  </div>
-                })
-                ->React.array}
-              </div>
+              <React.Fragment key={i->Int.toString}>
+                <Column colorCodes={c->String.substring(~start=0, ~end=5)} size />
+                <Column colorCodes={c->String.substring(~start=5, ~end=10)} size />
+              </React.Fragment>
             }
-          : <div key={i->Int.toString}>
-              {c
-              ->String.toUpperCase
-              ->charToBits1x
-              ->mapString((x, j) => {
-                <div
-                  key={j->Int.toString}
-                  style={{
-                    height: size,
-                    width: size,
-                    backgroundColor: x->charToColor,
-                  }}
-                />
-              })
-              ->React.array}
-            </div>
+          : <Column key={i->Int.toString} colorCodes={c->String.toUpperCase->charToBits1x} size />
       })
       ->React.array}
     </div>
@@ -236,40 +213,62 @@ module Millitext = {
 
 @react.component
 let make = () => {
-  let (text, setText) = React.useState(() => "")
+  let (text, setText) = React.useState(() => "Hello, World")
   let (use2x, setUse2x) = React.useState(() => false)
 
-  <div className="p-6 bg-black w-screen h-screen flex flex-col gap-2">
-    <div className="flex flex-row gap-2">
-      <button
-        onClick={_ => {
-          setUse2x(_ => false)
+  <div className="p-6 bg-black min-w-screen min-h-screen flex flex-col gap-2">
+    <div className={"flex-1 flex flex-col gap-2"}>
+      <h1 className="text-white text-4xl font-black mb-4"> {"Millitext"->React.string} </h1>
+      <p className="text-white text-sm font-medium mb-4">
+        {"This is a generator for the 1px wide font "->React.string}
+        <a href="https://www.msarnoff.org/millitext/"> {"millitext"->React.string} </a>
+        {" by Matt Sarnoff and inspired by his "->React.string}
+        <a href="https://github.com/74hc595/millitext"> {"older project."->React.string} </a>
+        {` The font exploits the fact that pixels are really three sub-pixels. If you get a microscope, a camera with a macro lens, or 
+      an old monitor, you should be able to see the result really is letters! 
+      You might have to zoom out to make the pixels true pixels on modern high-resolution displays.`->React.string}
+      </p>
+      <div className="flex flex-row gap-2 mb-2">
+        <button
+          onClick={_ => {
+            setUse2x(_ => false)
+          }}
+          className={[
+            "py-1 px-4 w-fit rounded font-bold",
+            !use2x ? "bg-blue-700 text-white" : " text-gray-500 hover:bg-blue-900",
+          ]->Array.join(" ")}>
+          {"1px wide"->React.string}
+        </button>
+        <button
+          onClick={_ => {
+            setUse2x(_ => true)
+          }}
+          className={[
+            "py-1 px-4 w-fit rounded font-bold",
+            use2x ? "bg-blue-700 text-white" : " text-gray-500 hover:bg-blue-900",
+          ]->Array.join(" ")}>
+          {"2px wide"->React.string}
+        </button>
+      </div>
+      <textarea
+        className={"w-80 px-2 py-1 rounded"}
+        value={text}
+        onChange={e => {
+          setText(_ => (e->ReactEvent.Form.target)["value"])
         }}
-        className={[
-          "py-1 px-4 w-fit rounded font-bold",
-          !use2x ? "bg-blue-700 text-white" : " text-gray-500 hover:bg-blue-900",
-        ]->Array.join(" ")}>
-        {"1px wide"->React.string}
-      </button>
-      <button
-        onClick={_ => {
-          setUse2x(_ => true)
-        }}
-        className={[
-          "py-1 px-4 w-fit rounded font-bold",
-          use2x ? "bg-blue-700 text-white" : " text-gray-500 hover:bg-blue-900",
-        ]->Array.join(" ")}>
-        {"2px wide"->React.string}
-      </button>
+      />
+      <div className="text-white font-bold text-xl"> {"Generated Text"->React.string} </div>
+      <Millitext size={"1px"} text use2x />
+      <div className="text-white font-bold text-xl"> {"Blown up 20x"->React.string} </div>
+      <Millitext size={"20px"} text use2x />
     </div>
-    <textarea
-      className={"w-80 px-2 py-1 rounded"}
-      value={text}
-      onChange={e => {
-        setText(_ => (e->ReactEvent.Form.target)["value"])
-      }}
-    />
-    <Millitext size={"1px"} text use2x />
-    <Millitext size={"20px"} text use2x />
+    <div className="text-slate-500 py-4 text-xs">
+      {"Website by "->React.string}
+      <a
+        className="text-blue-500 font-medium"
+        href={"https://github.com/thomaswright/algorithm-arena"}>
+        {"Thomas Wright"->React.string}
+      </a>
+    </div>
   </div>
 }
