@@ -268,9 +268,7 @@ let make = () => {
     </div>
     <div className="text-slate-500 py-4 text-xs">
       {"Website by "->React.string}
-      <a
-        className="text-blue-500 font-medium"
-        href={"https://github.com/thomaswright/algorithm-arena"}>
+      <a className="text-blue-500 font-medium" href={"https://github.com/thomaswright/millitext"}>
         {"Thomas Wright"->React.string}
       </a>
     </div>
