@@ -1,5 +1,7 @@
 // Note: everything here called a "char" is just a length 1 string
 
+// Character mappings are from https://github.com/74hc595/millitext/blob/master/milligen.rb
+
 let charToBits1x = c => {
   switch c {
   | "0" => "wmmmw....."
