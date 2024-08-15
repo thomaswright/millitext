@@ -340,24 +340,25 @@ function App$Millitext(props) {
   var size = props.size;
   return JsxRuntime.jsx("div", {
               children: mapString(props.text, (function (c, i) {
-                      if (!use2x) {
-                        return JsxRuntime.jsx(App$Column, {
-                                    colorCodes: charToBits1x(c.toUpperCase()),
-                                    size: size
+                      if (use2x) {
+                        var c$1 = charToBits2x(c.toUpperCase());
+                        return JsxRuntime.jsxs(React.Fragment, {
+                                    children: [
+                                      JsxRuntime.jsx(App$Column, {
+                                            colorCodes: c$1.substring(0, 5),
+                                            size: size
+                                          }),
+                                      JsxRuntime.jsx(App$Column, {
+                                            colorCodes: c$1.substring(5, 10),
+                                            size: size
+                                          })
+                                    ]
                                   }, i.toString());
                       }
-                      var c$1 = charToBits2x(c.toUpperCase());
-                      return JsxRuntime.jsxs(React.Fragment, {
-                                  children: [
-                                    JsxRuntime.jsx(App$Column, {
-                                          colorCodes: c$1.substring(0, 5),
-                                          size: size
-                                        }),
-                                    JsxRuntime.jsx(App$Column, {
-                                          colorCodes: c$1.substring(5, 10),
-                                          size: size
-                                        })
-                                  ]
+                      var c$2 = charToBits1x(c.toUpperCase()).substring(0, 5);
+                      return JsxRuntime.jsx(App$Column, {
+                                  colorCodes: c$2,
+                                  size: size
                                 }, i.toString());
                     })),
               className: "flex flex-row"
@@ -456,7 +457,7 @@ function App(props) {
                               use2x: use2x
                             })
                       ],
-                      className: "flex-1 flex flex-col gap-2"
+                      className: "flex-1 flex flex-col gap-2 max-w-2xl"
                     }),
                 JsxRuntime.jsxs("div", {
                       children: [
@@ -470,7 +471,7 @@ function App(props) {
                       className: "text-slate-500 py-4 text-xs"
                     })
               ],
-              className: "p-6 bg-black min-w-screen min-h-screen flex flex-col gap-2"
+              className: "p-6 bg-black min-w-screen min-h-screen flex flex-col gap-2 "
             });
 }
 

@@ -204,7 +204,11 @@ module Millitext = {
                 <Column colorCodes={c->String.substring(~start=5, ~end=10)} size />
               </React.Fragment>
             }
-          : <Column key={i->Int.toString} colorCodes={c->String.toUpperCase->charToBits1x} size />
+          : {
+              let c = c->String.toUpperCase->charToBits1x->String.substring(~start=0, ~end=5)
+
+              <Column key={i->Int.toString} colorCodes={c} size />
+            }
       })
       ->React.array}
     </div>
@@ -216,8 +220,8 @@ let make = () => {
   let (text, setText) = React.useState(() => "Hello, World")
   let (use2x, setUse2x) = React.useState(() => false)
 
-  <div className="p-6 bg-black min-w-screen min-h-screen flex flex-col gap-2">
-    <div className={"flex-1 flex flex-col gap-2"}>
+  <div className="p-6 bg-black min-w-screen min-h-screen flex flex-col gap-2 ">
+    <div className={"flex-1 flex flex-col gap-2 max-w-2xl"}>
       <h1 className="text-white text-4xl font-black mb-4"> {"Millitext"->React.string} </h1>
       <p className="text-white text-sm font-medium mb-4">
         {"This is a generator for the 1px wide font "->React.string}
