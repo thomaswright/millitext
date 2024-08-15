@@ -465,7 +465,7 @@ function App(props) {
                         JsxRuntime.jsx("a", {
                               children: "Thomas Wright",
                               className: "text-blue-500 font-medium",
-                              href: "https://github.com/thomaswright/algorithm-arena"
+                              href: "https://github.com/thomaswright/millitext"
                             })
                       ],
                       className: "text-slate-500 py-4 text-xs"
