@@ -382,33 +382,39 @@ function App$Millitext(props) {
   var subRender = props.subRender;
   var use2x = props.use2x;
   var size = props.size;
+  var eachLine = props.text.split("\n");
   return JsxRuntime.jsx("div", {
-              children: mapString(props.text, (function (c, i) {
-                      if (use2x) {
-                        var c$1 = charToBits2x(c.toUpperCase());
-                        return JsxRuntime.jsxs(React.Fragment, {
-                                    children: [
-                                      JsxRuntime.jsx(App$Column, {
-                                            colorCodes: c$1.substring(0, 5),
-                                            size: size,
-                                            subRender: subRender
-                                          }),
-                                      JsxRuntime.jsx(App$Column, {
-                                            colorCodes: c$1.substring(5, 10),
-                                            size: size,
-                                            subRender: subRender
-                                          })
-                                    ]
-                                  }, i.toString());
-                      }
-                      var c$2 = charToBits1x(c.toUpperCase()).substring(0, 5);
-                      return JsxRuntime.jsx(App$Column, {
-                                  colorCodes: c$2,
-                                  size: size,
-                                  subRender: subRender
-                                }, i.toString());
-                    })),
-              className: "flex flex-row overflow-x-scroll "
+              children: eachLine.map(function (lineText) {
+                    return JsxRuntime.jsx("div", {
+                                children: mapString(lineText, (function (c, i) {
+                                        if (use2x) {
+                                          var c$1 = charToBits2x(c.toUpperCase());
+                                          return JsxRuntime.jsxs(React.Fragment, {
+                                                      children: [
+                                                        JsxRuntime.jsx(App$Column, {
+                                                              colorCodes: c$1.substring(0, 5),
+                                                              size: size,
+                                                              subRender: subRender
+                                                            }),
+                                                        JsxRuntime.jsx(App$Column, {
+                                                              colorCodes: c$1.substring(5, 10),
+                                                              size: size,
+                                                              subRender: subRender
+                                                            })
+                                                      ]
+                                                    }, i.toString());
+                                        }
+                                        var c$2 = charToBits1x(c.toUpperCase()).substring(0, 5);
+                                        return JsxRuntime.jsx(App$Column, {
+                                                    colorCodes: c$2,
+                                                    size: size,
+                                                    subRender: subRender
+                                                  }, i.toString());
+                                      })),
+                                className: "flex flex-row "
+                              });
+                  }),
+              className: " "
             });
 }
 
@@ -477,7 +483,7 @@ function App(props) {
                               className: "flex flex-row gap-2 mb-2"
                             }),
                         JsxRuntime.jsx("textarea", {
-                              className: "w-80 px-2 py-1 rounded",
+                              className: " px-2  py-1 rounded",
                               value: text,
                               onChange: (function (e) {
                                   setText(function (param) {
@@ -489,31 +495,39 @@ function App(props) {
                               children: "Generated Text",
                               className: "text-white font-bold text-xl"
                             }),
-                        JsxRuntime.jsx(App$Millitext, {
-                              size: 1,
-                              text: text,
-                              use2x: use2x,
-                              subRender: false
-                            }),
                         JsxRuntime.jsx("div", {
-                              children: "Blown up 24x",
-                              className: "text-white font-bold text-xl"
+                              children: JsxRuntime.jsx(App$Millitext, {
+                                    size: 1,
+                                    text: text,
+                                    use2x: use2x,
+                                    subRender: false
+                                  }),
+                              className: "overflow-x-scroll "
                             }),
-                        JsxRuntime.jsx(App$Millitext, {
-                              size: 24,
-                              text: text,
-                              use2x: use2x,
-                              subRender: false
-                            }),
-                        JsxRuntime.jsx("div", {
-                              children: "Mock Subpixels",
-                              className: "text-white font-bold text-xl"
-                            }),
-                        JsxRuntime.jsx(App$Millitext, {
-                              size: 24,
-                              text: text,
-                              use2x: use2x,
-                              subRender: true
+                        JsxRuntime.jsxs("div", {
+                              children: [
+                                JsxRuntime.jsx("div", {
+                                      children: "Blown up 24x",
+                                      className: "text-white font-bold text-xl"
+                                    }),
+                                JsxRuntime.jsx(App$Millitext, {
+                                      size: 24,
+                                      text: text,
+                                      use2x: use2x,
+                                      subRender: false
+                                    }),
+                                JsxRuntime.jsx("div", {
+                                      children: "Mock Subpixels",
+                                      className: "text-white font-bold text-xl"
+                                    }),
+                                JsxRuntime.jsx(App$Millitext, {
+                                      size: 24,
+                                      text: text,
+                                      use2x: use2x,
+                                      subRender: true
+                                    })
+                              ],
+                              className: "overflow-x-scroll flex flex-col gap-2"
                             })
                       ],
                       className: "flex-1 flex flex-col gap-2 max-w-2xl"

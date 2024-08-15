@@ -234,22 +234,29 @@ module Column = {
 module Millitext = {
   @react.component
   let make = (~size: int, ~text, ~use2x: bool, ~subRender) => {
-    <div className={"flex flex-row overflow-x-scroll "}>
-      {text
-      ->mapString((c, i) => {
-        use2x
-          ? {
-              let c = c->String.toUpperCase->charToBits2x
-              <React.Fragment key={i->Int.toString}>
-                <Column colorCodes={c->String.substring(~start=0, ~end=5)} size subRender />
-                <Column colorCodes={c->String.substring(~start=5, ~end=10)} size subRender />
-              </React.Fragment>
-            }
-          : {
-              let c = c->String.toUpperCase->charToBits1x->String.substring(~start=0, ~end=5)
+    let eachLine = text->String.split("\n")
+    <div className=" ">
+      {eachLine
+      ->Array.map(lineText => {
+        <div className={"flex flex-row "}>
+          {lineText
+          ->mapString((c, i) => {
+            use2x
+              ? {
+                  let c = c->String.toUpperCase->charToBits2x
+                  <React.Fragment key={i->Int.toString}>
+                    <Column colorCodes={c->String.substring(~start=0, ~end=5)} size subRender />
+                    <Column colorCodes={c->String.substring(~start=5, ~end=10)} size subRender />
+                  </React.Fragment>
+                }
+              : {
+                  let c = c->String.toUpperCase->charToBits1x->String.substring(~start=0, ~end=5)
 
-              <Column key={i->Int.toString} colorCodes={c} size subRender />
-            }
+                  <Column key={i->Int.toString} colorCodes={c} size subRender />
+                }
+          })
+          ->React.array}
+        </div>
       })
       ->React.array}
     </div>
@@ -296,18 +303,22 @@ let make = () => {
         </button>
       </div>
       <textarea
-        className={"w-80 px-2 py-1 rounded"}
+        className={" px-2  py-1 rounded"}
         value={text}
         onChange={e => {
           setText(_ => (e->ReactEvent.Form.target)["value"])
         }}
       />
       <div className="text-white font-bold text-xl"> {"Generated Text"->React.string} </div>
-      <Millitext size={1} text use2x subRender={false} />
-      <div className="text-white font-bold text-xl"> {"Blown up 24x"->React.string} </div>
-      <Millitext size={24} text use2x subRender={false} />
-      <div className="text-white font-bold text-xl"> {"Mock Subpixels"->React.string} </div>
-      <Millitext size={24} text use2x subRender={true} />
+      <div className="overflow-x-scroll ">
+        <Millitext size={1} text use2x subRender={false} />
+      </div>
+      <div className="overflow-x-scroll flex flex-col gap-2">
+        <div className="text-white font-bold text-xl"> {"Blown up 24x"->React.string} </div>
+        <Millitext size={24} text use2x subRender={false} />
+        <div className="text-white font-bold text-xl"> {"Mock Subpixels"->React.string} </div>
+        <Millitext size={24} text use2x subRender={true} />
+      </div>
     </div>
     <div className="text-slate-500 py-4 text-xs">
       {"Website by "->React.string}
