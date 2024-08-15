@@ -2,6 +2,20 @@
 
 // Character mappings are from https://github.com/74hc595/millitext/blob/master/milligen.rb
 
+let colorToSub = c => {
+  switch c {
+  | "." => "..."
+  | "w" => "rgb"
+  | "r" => "r.."
+  | "g" => ".g."
+  | "b" => "..b"
+  | "y" => "rg."
+  | "c" => ".gb"
+  | "m" => "r.b"
+  | _ => "..."
+  }
+}
+
 let charToBits1x = c => {
   switch c {
   | "0" => "wmmmw....."
@@ -174,27 +188,52 @@ let mapString = (s, f) => {
 
 module Column = {
   @react.component
-  let make = (~colorCodes, ~size) => {
-    <div>
-      {colorCodes
-      ->mapString((x, j) => {
-        <div
-          key={j->Int.toString}
-          style={{
-            height: size,
-            width: size,
-            backgroundColor: x->charToColor,
-          }}
-        />
-      })
-      ->React.array}
-    </div>
+  let make = (~colorCodes, ~size: int, ~subRender) => {
+    subRender
+      ? {
+          <div>
+            {colorCodes
+            ->mapString((x, j) => {
+              let subColors = x->colorToSub
+              <div className="flex flex-row" key={j->Int.toString}>
+                {subColors
+                ->mapString((y, k) => {
+                  <div
+                    className="rounded"
+                    key={k->Int.toString}
+                    style={{
+                      height: size->Int.toString ++ "px",
+                      width: (size / 3)->Int.toString ++ "px",
+                      backgroundColor: y->charToColor,
+                    }}
+                  />
+                })
+                ->React.array}
+              </div>
+            })
+            ->React.array}
+          </div>
+        }
+      : <div>
+          {colorCodes
+          ->mapString((x, j) => {
+            <div
+              key={j->Int.toString}
+              style={{
+                height: size->Int.toString ++ "px",
+                width: size->Int.toString ++ "px",
+                backgroundColor: x->charToColor,
+              }}
+            />
+          })
+          ->React.array}
+        </div>
   }
 }
 
 module Millitext = {
   @react.component
-  let make = (~size, ~text, ~use2x: bool) => {
+  let make = (~size: int, ~text, ~use2x: bool, ~subRender) => {
     <div className={"flex flex-row"}>
       {text
       ->mapString((c, i) => {
@@ -202,14 +241,14 @@ module Millitext = {
           ? {
               let c = c->String.toUpperCase->charToBits2x
               <React.Fragment key={i->Int.toString}>
-                <Column colorCodes={c->String.substring(~start=0, ~end=5)} size />
-                <Column colorCodes={c->String.substring(~start=5, ~end=10)} size />
+                <Column colorCodes={c->String.substring(~start=0, ~end=5)} size subRender />
+                <Column colorCodes={c->String.substring(~start=5, ~end=10)} size subRender />
               </React.Fragment>
             }
           : {
               let c = c->String.toUpperCase->charToBits1x->String.substring(~start=0, ~end=5)
 
-              <Column key={i->Int.toString} colorCodes={c} size />
+              <Column key={i->Int.toString} colorCodes={c} size subRender />
             }
       })
       ->React.array}
@@ -264,9 +303,11 @@ let make = () => {
         }}
       />
       <div className="text-white font-bold text-xl"> {"Generated Text"->React.string} </div>
-      <Millitext size={"1px"} text use2x />
-      <div className="text-white font-bold text-xl"> {"Blown up 20x"->React.string} </div>
-      <Millitext size={"20px"} text use2x />
+      <Millitext size={1} text use2x subRender={false} />
+      <div className="text-white font-bold text-xl"> {"Blown up 24x"->React.string} </div>
+      <Millitext size={24} text use2x subRender={false} />
+      <div className="text-white font-bold text-xl"> {"Mock Subpixels"->React.string} </div>
+      <Millitext size={24} text use2x subRender={true} />
     </div>
     <div className="text-slate-500 py-4 text-xs">
       {"Website by "->React.string}

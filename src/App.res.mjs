@@ -4,6 +4,27 @@ import * as React from "react";
 import * as Core__Array from "@rescript/core/src/Core__Array.res.mjs";
 import * as JsxRuntime from "react/jsx-runtime";
 
+function colorToSub(c) {
+  switch (c) {
+    case "b" :
+        return "..b";
+    case "c" :
+        return ".gb";
+    case "g" :
+        return ".g.";
+    case "m" :
+        return "r.b";
+    case "r" :
+        return "r..";
+    case "w" :
+        return "rgb";
+    case "y" :
+        return "rg.";
+    default:
+      return "...";
+  }
+}
+
 function charToBits1x(c) {
   switch (c) {
     case " " :
@@ -322,20 +343,43 @@ function mapString(s, f) {
 
 function App$Column(props) {
   var size = props.size;
-  return JsxRuntime.jsx("div", {
-              children: mapString(props.colorCodes, (function (x, j) {
-                      return JsxRuntime.jsx("div", {
-                                  style: {
-                                    backgroundColor: charToColor(x),
-                                    height: size,
-                                    width: size
-                                  }
-                                }, j.toString());
-                    }))
-            });
+  var colorCodes = props.colorCodes;
+  if (props.subRender) {
+    return JsxRuntime.jsx("div", {
+                children: mapString(colorCodes, (function (x, j) {
+                        var subColors = colorToSub(x);
+                        return JsxRuntime.jsx("div", {
+                                    children: mapString(subColors, (function (y, k) {
+                                            return JsxRuntime.jsx("div", {
+                                                        className: "rounded",
+                                                        style: {
+                                                          backgroundColor: charToColor(y),
+                                                          height: size.toString() + "px",
+                                                          width: (size / 3 | 0).toString() + "px"
+                                                        }
+                                                      }, k.toString());
+                                          })),
+                                    className: "flex flex-row"
+                                  }, j.toString());
+                      }))
+              });
+  } else {
+    return JsxRuntime.jsx("div", {
+                children: mapString(colorCodes, (function (x, j) {
+                        return JsxRuntime.jsx("div", {
+                                    style: {
+                                      backgroundColor: charToColor(x),
+                                      height: size.toString() + "px",
+                                      width: size.toString() + "px"
+                                    }
+                                  }, j.toString());
+                      }))
+              });
+  }
 }
 
 function App$Millitext(props) {
+  var subRender = props.subRender;
   var use2x = props.use2x;
   var size = props.size;
   return JsxRuntime.jsx("div", {
@@ -346,11 +390,13 @@ function App$Millitext(props) {
                                     children: [
                                       JsxRuntime.jsx(App$Column, {
                                             colorCodes: c$1.substring(0, 5),
-                                            size: size
+                                            size: size,
+                                            subRender: subRender
                                           }),
                                       JsxRuntime.jsx(App$Column, {
                                             colorCodes: c$1.substring(5, 10),
-                                            size: size
+                                            size: size,
+                                            subRender: subRender
                                           })
                                     ]
                                   }, i.toString());
@@ -358,7 +404,8 @@ function App$Millitext(props) {
                       var c$2 = charToBits1x(c.toUpperCase()).substring(0, 5);
                       return JsxRuntime.jsx(App$Column, {
                                   colorCodes: c$2,
-                                  size: size
+                                  size: size,
+                                  subRender: subRender
                                 }, i.toString());
                     })),
               className: "flex flex-row"
@@ -443,18 +490,30 @@ function App(props) {
                               className: "text-white font-bold text-xl"
                             }),
                         JsxRuntime.jsx(App$Millitext, {
-                              size: "1px",
+                              size: 1,
                               text: text,
-                              use2x: use2x
+                              use2x: use2x,
+                              subRender: false
                             }),
                         JsxRuntime.jsx("div", {
-                              children: "Blown up 20x",
+                              children: "Blown up 24x",
                               className: "text-white font-bold text-xl"
                             }),
                         JsxRuntime.jsx(App$Millitext, {
-                              size: "20px",
+                              size: 24,
                               text: text,
-                              use2x: use2x
+                              use2x: use2x,
+                              subRender: false
+                            }),
+                        JsxRuntime.jsx("div", {
+                              children: "Mock Subpixels",
+                              className: "text-white font-bold text-xl"
+                            }),
+                        JsxRuntime.jsx(App$Millitext, {
+                              size: 24,
+                              text: text,
+                              use2x: use2x,
+                              subRender: true
                             })
                       ],
                       className: "flex-1 flex flex-col gap-2 max-w-2xl"
