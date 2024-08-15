@@ -449,7 +449,7 @@ function App(props) {
                                       children: "older project.",
                                       href: "https://github.com/74hc595/millitext"
                                     }),
-                                " The font exploits the fact that pixels are really three sub-pixels. If you get a microscope, a camera with a macro lens, or \n      an old monitor, you should be able to see the result really is letters! \n      You might have to zoom out to make the pixels true pixels on modern high-resolution displays."
+                                " The font exploits the fact that pixels are really three subpixels. If you get a microscope, a camera with a macro lens, or \n      an old monitor, you should be able to see the result really is letters! \n      You might have to zoom out to make the pixels true pixels on modern high-resolution displays."
                               ],
                               className: "text-white text-sm font-medium mb-4"
                             }),

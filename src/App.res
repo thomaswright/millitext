@@ -276,7 +276,7 @@ let make = () => {
         <a href="https://www.msarnoff.org/millitext/"> {"millitext"->React.string} </a>
         {" by Matt Sarnoff and inspired by his "->React.string}
         <a href="https://github.com/74hc595/millitext"> {"older project."->React.string} </a>
-        {` The font exploits the fact that pixels are really three sub-pixels. If you get a microscope, a camera with a macro lens, or 
+        {` The font exploits the fact that pixels are really three subpixels. If you get a microscope, a camera with a macro lens, or 
       an old monitor, you should be able to see the result really is letters! 
       You might have to zoom out to make the pixels true pixels on modern high-resolution displays.`->React.string}
       </p>
