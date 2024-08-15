@@ -234,7 +234,7 @@ module Column = {
 module Millitext = {
   @react.component
   let make = (~size: int, ~text, ~use2x: bool, ~subRender) => {
-    <div className={"flex flex-row"}>
+    <div className={"flex flex-row overflow-x-scroll "}>
       {text
       ->mapString((c, i) => {
         use2x

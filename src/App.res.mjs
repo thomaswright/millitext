@@ -408,7 +408,7 @@ function App$Millitext(props) {
                                   subRender: subRender
                                 }, i.toString());
                     })),
-              className: "flex flex-row"
+              className: "flex flex-row overflow-x-scroll "
             });
 }
 
