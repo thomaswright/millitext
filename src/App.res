@@ -321,7 +321,7 @@ let make = () => {
       </div>
     </div>
     <div className="text-slate-500 py-4 text-xs">
-      {"Website by "->React.string}
+      {"By "->React.string}
       <a className="text-blue-500 font-medium" href={"https://github.com/thomaswright/millitext"}>
         {"Thomas Wright"->React.string}
       </a>
