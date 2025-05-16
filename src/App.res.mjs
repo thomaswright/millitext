@@ -534,7 +534,7 @@ function App(props) {
                     }),
                 JsxRuntime.jsxs("div", {
                       children: [
-                        "Website by ",
+                        "By ",
                         JsxRuntime.jsx("a", {
                               children: "Thomas Wright",
                               className: "text-blue-500 font-medium",
